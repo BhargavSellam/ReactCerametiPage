@@ -9,7 +9,11 @@ export interface Course {
   price: string;
   instructor: string;
   outcomes: string[];
+  tools?: string[];
   image: string;
+  // Optional fields used by the course detail page
+  curriculumModules?: { title: string; description?: string }[];
+  whoThisProgramIsFor?: string[];
 }
 
 export interface BlogPost {

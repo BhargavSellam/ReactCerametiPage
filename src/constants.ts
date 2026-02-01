@@ -1,5 +1,5 @@
 
-import type { Course, BlogPost, Lead } from './types';
+import type { Course, BlogPost } from './types';
 
 export const COLORS = {
   primary: '#1E2D5A',   // Navy
@@ -10,66 +10,115 @@ export const COLORS = {
 };
 
 export const INITIAL_COURSES: Course[] = [
-  // Placement Track
+  // Placement Track - prioritized per request
   {
-    id: 'p1',
-    title: 'Fullstack Python with AI',
-    description: 'Master backend engineering with Python & Django, frontend with React, and integrate advanced AI capabilities into your applications. Includes real-world enterprise projects.',
+    id: 'ds1',
+    title: 'Data Science',
+    description: 'Comprehensive Data Science program covering statistics, modeling, deep learning and practical ML ops with capstone projects and agentic applications.',
     category: 'Placement',
-    duration: '',
-    level: 'Beginner',
-    price: '$1,299',
-    instructor: 'Dr. Sarah Mitchell',
-    outcomes: ['Django & FastAPI', 'React/Next.js', 'LangChain Integration', 'Database Design', 'Cloud Hosting'],
-    image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=1200',
-  },
-  {
-    id: 'p2',
-    title: 'Fullstack Java with AI',
-    description: 'The definitive enterprise engineering track. Learn Spring Boot, Microservices, and how to leverage AI for automated testing and code optimization in large-scale systems.',
-    category: 'Placement',
-    duration: '',
-    level: 'Beginner',
-    price: '$1,299',
-    instructor: 'James Wilson',
-    outcomes: ['Spring Boot', 'Microservices Architecture', 'AI-Driven Development', 'Hibernate/JPA', 'Security'],
-    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1200',
-  },
-  {
-    id: 'p3',
-    title: 'MERN Stack with AI',
-    description: 'Become a master of the modern web. Learn MongoDB, Express, React, and Node.js with a specialized focus on building AI-powered chatbots and interactive intelligent interfaces.',
-    category: 'Placement',
-    duration: '',
-    level: 'Beginner',
-    price: '$1,100',
-    instructor: 'Elena Rodriguez',
-    outcomes: ['React & Redux', 'Node.js/Express', 'AI Chatbot Logic', 'NoSQL Mastery', 'AWS Lambda'],
-    image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=1200',
-  },
-  {
-    id: 'p4',
-    title: 'Data Science with Gen AI',
-    description: 'Go beyond traditional analytics. Master Python for data science and learn to implement Generative AI models for synthetic data generation and advanced predictive modeling.',
-    category: 'Placement',
-    duration: '',
+    duration: '6 months',
     level: 'Intermediate',
-    price: '$1,400',
-    instructor: 'Marcus Chen',
-    outcomes: ['Predictive Modeling', 'LLM Fine-tuning', 'PyTorch/TensorFlow', 'Advanced Stats', 'NLP Foundations'],
-    image: 'https://images.unsplash.com/photo-1551288049-bbda4833878d?auto=format&fit=crop&q=80&w=1200',
+    price: '₹79,999',
+    instructor: 'Dr. Ananya Rao',
+    outcomes: ['Exploratory Data Analysis', 'Supervised & Unsupervised Learning', 'Deep Learning (DL/CV/NLP)', 'MLOps & Deployment', 'AI Agents Integration', 'Excel & PowerBI/Tableau', 'Java for Data Engineering'],
+    tools: ['Python', 'pandas', 'numpy', 'scikit-learn', 'TensorFlow/PyTorch', 'Streamlit', 'AWS'],
+    image: 'https://images.unsplash.com/photo-1531497865144-046194a1776a?auto=format&fit=crop&q=80&w=1200',
+    curriculumModules: [
+      { title: 'Programming & Data', description: 'Python ETL (pandas, numpy), matplotlib & plotly; advanced SQL, Excel & PowerBI/Tableau' },
+      { title: 'Mathematical Foundations', description: 'Statistics, probability and linear algebra' },
+      { title: 'Core Machine Learning', description: 'Supervised & unsupervised methods, feature engineering' },
+      { title: 'Deep Learning & NLP/CV', description: 'Transformers, NLP, CV and DL architectures' },
+      { title: 'MLOps & Cloud', description: 'Streamlit, AWS deployment, model serving and monitoring' },
+      { title: 'Capstone Projects', description: 'Three industry-aligned capstones with real datasets' }
+    ],
+    whoThisProgramIsFor: ['Aspiring data scientists', 'Engineers seeking ML careers', 'Professionals looking to upskill']
   },
   {
-    id: 'p5',
-    title: 'Data Analysis with AI Integration',
-    description: 'Transform how businesses make decisions. Learn SQL, Tableau, and PowerBI combined with AI tools to automate reporting and extract deeper hidden insights.',
+    id: 'da1',
+    title: 'Data Analysis',
+    description: 'Practical Data Analysis track: Python ETL, pandas, numpy, visualization, SQL and BI tooling — built for fast impact and three capstone projects.',
     category: 'Placement',
-    duration: '',
+    duration: '4 months',
     level: 'Beginner',
-    price: '$999',
-    instructor: 'Dr. Emily Watson',
-    outcomes: ['SQL & Data Cleaning', 'BI Tool Mastery', 'AI Insights Automation', 'Strategic Storytelling', 'Statistical Logic'],
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200',
+    tools: ['Python', 'pandas', 'numpy', 'matplotlib', 'plotly', 'Excel', 'PowerBI', 'Tableau'],
+    price: '₹39,999',
+    instructor: 'Priya Sharma',
+    outcomes: ['Python ETL (pandas)', 'Advanced SQL', 'Visualization (matplotlib/plotly)', 'BI (Excel, PowerBI/Tableau)', '3 Capstone Projects', 'AI Agents basics', 'Java for ETL & Automation'],
+    image: 'https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&q=80&w=1200',
+    curriculumModules: [
+      { title: 'Python ETL & Tools', description: 'pandas, numpy, data cleaning and ETL pipelines,excel' },
+      { title: 'Advanced SQL', description: 'Window functions, joins, performance and analytics' },
+      { title: 'Visualization & BI', description: 'matplotlib, plotly, BI (Excel, PowerBI/Tableau) ' },
+      { title: 'Mathematical Foundations', description: 'Statistics and probability for analysis' },
+      { title: 'Applied Capstones', description: 'Three business-focused capstone projects' }
+    ],
+    whoThisProgramIsFor: ['Business analysts', 'Fresh graduates', 'Career switchers into analytics']
+  },
+  {
+    id: 'pf1',
+    title: 'Python Fullstack',
+    description: 'End-to-end Python Fullstack track: frontend basics, React, Python backend, Django/FastAPI, system design, DSA fundamentals and AI integrations.',
+    category: 'Placement',
+    duration: '6 months',
+    tools: ['Python', 'Django', 'FastAPI', 'React', 'Tailwind CSS', 'PostgreSQL', 'Aws', 'Git'],
+
+    level: 'Beginner',
+    price: '₹59,999',
+    instructor: 'Karthik Menon',
+    outcomes: ['Frontend (HTML/CSS/JS, Tailwind)', 'React basics', 'Django & FastAPI', 'System Design & DSA', 'AI Integration & Agents', 'Java Backend Fundamentals'],
+    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1200',
+    curriculumModules: [
+      { title: 'Web Foundations', description: 'HTML, CSS, JS, Bootstrap, Tailwind' },
+      { title: 'React & Next Basics', description: 'React fundamentals and introductory Next.js' },
+      { title: 'Backend Essentials', description: 'Python advanced, Django, FastAPI; introduction to Java backend concepts' },
+      { title: 'Systems & DSA', description: 'System design principles, architecture and DSA basics' },
+      { title: 'Agents & AI Integration', description: 'Agent basics, AI integration patterns and deployment' },
+      { title: 'Capstone', description: 'Fullstack capstone with production deployment' }
+    ],
+    whoThisProgramIsFor: ['Aspiring backend/fullstack engineers', 'Bootcamp grads']
+  },
+  {
+    id: 'java1',
+    title: 'Java Backend & Spring',
+    description: 'Java backend engineering: core Java, Spring Boot, microservices, SQL, system design, and production-ready APIs.',
+    category: 'Placement',
+    duration: '6 months',
+    level: 'Intermediate',
+    price: '₹69,999',
+    tools: ['Java', 'Spring Boot', 'Microservices', 'JDBC', 'SQL', 'Docker', 'AWS'],
+    instructor: 'Ravi Kumar',
+    outcomes: ['Core Java & OOP', 'Spring Boot & REST APIs', 'Microservices & Kafka', 'SQL & Data Modelling', 'System Design', 'Capstone Project'],
+    image: 'https://images.unsplash.com/photo-1526378720908-2fc7a37b7d72?auto=format&fit=crop&q=80&w=1200',
+    curriculumModules: [
+      { title: 'Java Foundations', description: 'Core Java, OOP, concurrency and JVM internals' },
+      { title: 'Spring Boot & APIs', description: 'REST API design, Spring Boot, Spring Data' },
+      { title: 'Microservices & Integration', description: 'Microservice patterns, Kafka, messaging and service meshes' },
+      { title: 'Databases & SQL', description: 'Relational modelling, indexing and performance' },
+      { title: 'System Design & DSA', description: 'Architectural patterns and essential algorithms' },
+      { title: 'Capstone Project', description: 'Production-grade API service with monitoring and CI/CD' }
+    ],
+    whoThisProgramIsFor: ['Backend engineers', 'Experienced Java developers looking to upskill for cloud & microservices']
+  },
+  {
+    id: 'aa1',
+    title: 'AI Agents',
+    description: 'Specialized program to build multi-agent systems, RAGs, chatbots and automated workflows using LangChain, LangGraph and popular agent platforms.',
+    category: 'Upskilling',
+    duration: '3 months',
+    level: 'Advanced',
+    tools: ['LangChain', 'LangGraph', 'n8n', 'prompt engineering', 'FastAPI', 'Streamlit'],
+    price: '₹49,999',
+    instructor: 'Sanjay Iyer',
+    outcomes: ['Python & Streamlit', 'FastAPI & APIs', 'LLMs & Prompt Engineering', 'LangChain & LangGraph', 'Crew AI & Multi-Agent Coordination', 'RAGs & Chatbots', 'Workflow Automation (n8n, Zapier, Microsoft Agent)'],
+    image: 'https://images.unsplash.com/photo-1526378720908-2fc7a37b7d72?auto=format&fit=crop&q=80&w=1200',
+    curriculumModules: [
+      { title: 'Agent Foundations', description: 'Python, Streamlit, FastAPI and working with LLMs' },
+      { title: 'Prompt Engineering & LLMs', description: 'Advanced prompt patterns and LLM orchestration' },
+      { title: 'LangChain & LangGraph', description: 'Tool usage, chains and integrations' },
+      { title: 'Multi-Agent Systems & Crew AI', description: 'Designing, orchestrating and coordinating multi-agent systems' },
+      { title: 'RAGs, Chatbots & Workflows', description: 'RAG pipelines, chatbots, n8n, Zapier and Microsoft Agent integrations' }
+    ],
+    whoThisProgramIsFor: ['AI engineers', 'Product teams building agent workflows']
   },
 
   // Upskilling Track
@@ -106,7 +155,7 @@ export const INITIAL_COURSES: Course[] = [
     level: 'Intermediate',
     price: '$699',
     instructor: 'Leo Zhang',
-    outcomes: ['Transformer Architecture', 'Prompt Engineering', 'Model Deployment', 'AI Ethics', 'Vector Databases'],
+    outcomes: ['Transformer Architecture', 'Prompt Engineering', 'Model Deployment', 'AI Ethics', 'Vector Databases', 'Agent Workflows & RAGs'],
     image: 'https://images.unsplash.com/photo-1684163762274-5bf7e05cc481?auto=format&fit=crop&q=80&w=1200',
   },
   {
@@ -201,7 +250,11 @@ Ultimately, a strong foundation allows for rapid adaptation to future technologi
 export const NAVIGATION = [
   { name: 'Home', path: '/' },
   { name: 'About', path: '/about' },
-  { name: 'Courses', path: '/courses' },
+  { name: 'Our Products', children: [
+    { name: 'Courses', path: '/courses' },
+    { name: 'Job Search', path: '/job-search' },
+    { name: 'Free Career Guidance', path: '/free-guidance' }
+  ] },
   { name: 'Hire From Us', path: '/hire' },
   { name: 'Blog', path: '/blog' },
   { name: 'Contact', path: '/contact' }

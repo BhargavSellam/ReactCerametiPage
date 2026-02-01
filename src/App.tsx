@@ -1,14 +1,9 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { HashRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { 
-  Menu, X, BookOpen, Users, Briefcase, ChevronRight, 
-  LayoutDashboard, LogIn, Mail, Phone, MapPin, Search, 
-  Filter, TrendingUp, Award, Clock, ArrowRight, Twitter, 
-  Linkedin, CheckCircle, Database, FileText, Settings, LogOut, Sparkles, 
-  Target, Compass, Zap, Star, Tv, MessageSquare, Layout, Shield, 
-  Activity, Globe, GraduationCap, Check, Loader2, MessageCircle, Code, Cpu, Layers, Terminal
+  Menu, X, ArrowRight, ChevronLeft, ChevronDown, Clock, Award, CheckCircle, Check, Shield, Star, Tv, LayoutDashboard, MessageCircle, Handshake, ClipboardCheck, FileText, Users, Compass, Zap, Target, Activity, Globe, MessageSquare, GraduationCap, Linkedin, Loader2, Phone, TrendingUp
 } from 'lucide-react';
-import { INITIAL_COURSES, INITIAL_BLOGS, NAVIGATION, COLORS } from './constants';
+import { INITIAL_COURSES, INITIAL_BLOGS, NAVIGATION } from './constants';
 import type { Course, BlogPost, Lead, User } from './types';
 import siteLogo from './for-website.png';
 
@@ -81,6 +76,58 @@ const CURRICULA: Record<string, { duration: string; modules: { title: string; po
       { title: 'Architecture of LLMs', points: ['Attention Mechanism Deep Dive', 'Encoder-Decoder Models', 'Transformer Block Theory'] },
       { title: 'Retrieval Augmented Generation', points: ['Building RAG Pipelines', 'Document Ingestion & Chunking', 'Hybrid Search Strategies'] },
       { title: 'Model Optimization', points: ['Quantization (QLoRA)', 'PEFT Fine-tuning Techniques', 'Deployment with vLLM/Ollama'] }
+    ]
+  },
+  'ds1': {
+    duration: '6 months',
+    modules: [
+      { title: 'Programming & Data', points: ['Python ETL (pandas, numpy)', 'matplotlib & plotly', 'Advanced SQL'] },
+      { title: 'Mathematical Foundations', points: ['Statistics & probability', 'Linear algebra'] },
+      { title: 'Core Machine Learning', points: ['Supervised & unsupervised learning', 'Feature engineering', 'Model evaluation'] },
+      { title: 'Deep Learning & NLP/CV', points: ['Transformers & attention', 'NLP pipelines', 'Computer Vision models'] },
+      { title: 'MLOps & Deployment', points: ['Streamlit apps', 'AWS deployment', 'Model serving & monitoring'] },
+      { title: 'Capstone Projects', points: ['Three industry-aligned capstones with real datasets'] }
+    ]
+  },
+  'da1': {
+    duration: '4 months',
+    modules: [
+      { title: 'Python ETL & Tools', points: ['pandas', 'numpy', 'ETL pipelines'] },
+      { title: 'Advanced SQL', points: ['Window functions', 'Performance tuning', 'Analytics'] },
+      { title: 'Visualization & BI', points: ['matplotlib', 'plotly', 'PowerBI', 'Tableau'] },
+      { title: 'Mathematical Foundations', points: ['Statistics', 'Probability'] },
+      { title: 'Applied Capstones', points: ['Three business-focused capstone projects'] }
+    ]
+  },
+  'pf1': {
+    duration: '6 months',
+    modules: [
+      { title: 'Web Foundations', points: ['HTML, CSS, JS', 'Bootstrap & Tailwind'] },
+      { title: 'React & Next Basics', points: ['React fundamentals', 'Intro to Next.js'] },
+      { title: 'Backend Essentials', points: ['Python backend (Django & FastAPI)', 'Intro to Java backend'] },
+      { title: 'Systems & DSA', points: ['System design principles', 'DSA basics'] },
+      { title: 'Agents & AI Integration', points: ['Agent basics', 'AI integration patterns'] },
+      { title: 'Fullstack Capstone', points: ['Deploy a production-ready application'] }
+    ]
+  },
+  'java1': {
+    duration: '6 months',
+    modules: [
+      { title: 'Java Foundations', points: ['Core Java & OOP', 'Concurrency & JVM internals'] },
+      { title: 'Spring Boot & APIs', points: ['REST API design', 'Spring Boot & Spring Data'] },
+      { title: 'Microservices & Integration', points: ['Microservice patterns', 'Kafka & messaging'] },
+      { title: 'Databases & SQL', points: ['Relational modelling', 'Indexing & performance'] },
+      { title: 'System Design & Capstone', points: ['Architectural patterns', 'Production API project'] }
+    ]
+  },
+  'aa1': {
+    duration: '3 months',
+    modules: [
+      { title: 'Agent Foundations', points: ['Python & Streamlit', 'FastAPI', 'LLM usage'] },
+      { title: 'Prompt Engineering & LLMs', points: ['Prompt patterns', 'LLM orchestration'] },
+      { title: 'LangChain & LangGraph', points: ['Chains, tools & integrations'] },
+      { title: 'Multi-Agent Systems', points: ['CrewAI & multi-agent coordination', 'Agent orchestration patterns'] },
+      { title: 'RAGs, Chatbots & Workflows', points: ['RAG pipelines', 'Chatbots', 'n8n, Zapier & Microsoft Agent integrations'] }
     ]
   }
 };
@@ -336,51 +383,34 @@ const CourseCard: React.FC<{ course: Course, trending?: boolean }> = ({ course, 
   const { openCurriculum } = useContext(AppContext)!;
   const navigate = useNavigate();
   return (
-    <div className="group bg-white rounded-[40px] overflow-hidden border border-slate-100 shadow-xl transition-all duration-500 hover:-translate-y-3 flex flex-col h-full relative">
+    <div className="group bg-white rounded-[20px] overflow-hidden border border-slate-100 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col h-full relative">
       {trending && (
-        <div className="absolute top-5 right-5 z-10 bg-white px-4 py-1.5 rounded-full shadow-lg flex items-center gap-2 border border-[#76BC21]/20">
-          <Star className="w-4 h-4 text-[#76BC21] fill-[#76BC21]" />
-          <span className="text-[11px] font-black text-[#1E2D5A] uppercase tracking-widest">Trending</span>
+        <div className="absolute top-4 right-4 z-10 bg-white px-3 py-1 rounded-full flex items-center gap-2 border border-[#76BC21]/20">
+          <Star className="w-4 h-4 text-[#76BC21]" />
+          <span className="text-[10px] font-black text-[#1E2D5A] uppercase tracking-widest">Trending</span>
         </div>
       )}
-      <div className="relative h-72 overflow-hidden flex-shrink-0">
+      <div className="relative h-48 overflow-hidden flex-shrink-0">
         <img 
           src={course.image} 
           alt={course.title} 
-          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1200";
-          }}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+          onError={(e) => { (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1200"; }}
         />
-        <div className="absolute bottom-6 left-6 px-5 py-2 bg-[#76BC21] text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl">
-          {course.level}
-        </div>
       </div>
-      <div className="p-10 flex flex-col flex-grow">
-        <h3 className="text-2xl font-black mb-5 text-[#1E2D5A] group-hover:text-[#76BC21] transition-colors leading-tight uppercase">
-          {course.title}
-        </h3>
-        <p className="text-slate-500 text-sm mb-12 flex-grow leading-relaxed font-medium">
-          {course.description}
-        </p>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-auto">
-          <Button 
-            variant="outline" 
-            size="md" 
-            className="w-full py-4 text-[#1E2D5A] border-slate-300 hover:border-[#1E2D5A] uppercase tracking-[0.1em] text-[11px] font-black rounded-2xl shadow-sm"
-            onClick={() => openCurriculum(course)}
-          >
-            View Curriculum
-          </Button>
-          <Button 
-            variant="secondary" 
-            size="md" 
-            className="w-full py-4 bg-[#00A3E0] hover:bg-[#0089bd] text-white uppercase tracking-[0.1em] text-[11px] font-black shadow-lg rounded-2xl"
-            onClick={() => navigate('/contact#enquiry-form')}
-          >
-            Register Now
-          </Button>
+      <div className="px-6 py-6 flex flex-col flex-grow">
+        <h3 className="text-xl font-extrabold mb-3 text-[#1E2D5A] leading-tight">{course.title}</h3>
+        <p className="text-sm text-slate-600 mb-4 flex-grow leading-relaxed">{course.description}</p>
+        {course.tools && course.tools.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {course.tools.map((t) => (
+              <span key={t} className="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">{t}</span>
+            ))}
+          </div>
+        )}
+        <div className="flex flex-col gap-3 mt-4">
+          <button onClick={() => openCurriculum(course)} className="w-full rounded-2xl border border-[#1E2D5A] text-[#1E2D5A] py-3 font-bold uppercase text-sm">View Curriculum</button>
+          <button onClick={() => navigate('/contact#enquiry-form')} className="w-full rounded-2xl bg-[#76BC21] text-white py-3 font-bold uppercase text-sm">Enrol Now</button>
         </div>
       </div>
     </div>
@@ -395,7 +425,7 @@ const PlacementJourney = () => {
     { id: '04', icon: Tv, title: 'TECHNICAL COMMENCEMENT', desc: 'Phase 1 training begins with expert-led live sessions focused on deep conceptual understanding and architectural foundations.' },
     { id: '05', icon: CheckCircle, title: 'GUIDED APPLIED LEARNING', desc: 'Trainer-assisted labs and continuous guidance sessions to bridge the gap between abstract theory and functional code.' },
     { id: '06', icon: MessageSquare, title: 'READINESS ASSESSMENT', desc: 'Frequent mock interviews and psychological prep sessions to simulate high-pressure recruitment environments.' },
-    { id: '07', icon: Layout, title: 'LIVE INDUSTRY SIMULATION', desc: 'Mandatory capstone project involving a production-grade application that solves a verifiable industry business problem.' },
+    { id: '07', icon: LayoutDashboard, title: 'LIVE INDUSTRY SIMULATION', desc: 'Mandatory capstone project involving a production-grade application that solves a verifiable industry business problem.' },
     { id: '08', icon: GraduationCap, title: 'PLACEMENT ECOSYSTEM', desc: 'Full transition support with exclusive interview opportunities across our partner network of top-tier global firms.' }
   ];
 
@@ -516,9 +546,9 @@ const TrackComparison = () => {
 
 const TrendingTracks = ({ courses }: { courses: Course[] }) => {
   const trendingCourses = courses.filter(c => 
-    c.id === 'p1' || 
-    c.id === 'p4' || 
-    c.id === 'u1'    
+    c.id === 'ds1' || 
+    c.id === 'da1' || 
+    c.id === 'aa1'
   );
 
   return (
@@ -552,11 +582,23 @@ const TrendingTracks = ({ courses }: { courses: Course[] }) => {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user } = useContext(AppContext)!;
   const location = useLocation();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
+    <nav className="md:fixed md:top-12 w-full z-40 bg-white/70 backdrop-blur-md border-b border-slate-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center">
@@ -564,15 +606,45 @@ const Navbar = () => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-8">
-            {NAVIGATION.map((item) => (
-              <Link 
-                key={item.name} 
-                to={item.path} 
-                className={`text-m font-bold uppercase tracking-widest transition-colors ${location.pathname === item.path ? 'text-[#76BC21]' : 'text-slate-500 hover:text-[#1E2D5A]'}`}
-              >
-                {item.name}
-              </Link>
-            ))}
+            {NAVIGATION.map((item) => {
+              const isActive = item.path ? location.pathname === item.path : item.children ? item.children.some(child => location.pathname === child.path) : false;
+              const hasChildren = !!item.children;
+
+              if (hasChildren) {
+                return (
+                  <div key={item.name} className="relative" ref={dropdownRef}>
+                    <button
+                      onClick={() => setDropdownOpen(!dropdownOpen)}
+                      className={`text-m font-bold uppercase tracking-widest flex items-center gap-2 transition-colors ${isActive || dropdownOpen ? 'text-[#76BC21]' : 'text-slate-500 hover:text-[#1E2D5A]'}`}
+                    >
+                      {item.name} <ChevronDown className={`w-3 h-3 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    {dropdownOpen && (
+                      <div className="absolute top-full left-0 mt-4 w-64 bg-white border border-slate-100 shadow-2xl rounded-2xl p-4">
+                        <div className="flex flex-col gap-1">
+                          {item.children!.map(child => (
+                            <Link key={child.name} to={child.path} onClick={() => setDropdownOpen(false)} className="px-4 py-3 text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-[#76BC21] hover:bg-slate-50 rounded-xl transition-all">
+                              {child.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={`text-m font-bold uppercase tracking-widest transition-colors ${isActive ? 'text-[#76BC21]' : 'text-slate-500 hover:text-[#1E2D5A]'}`}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
+
             <div className="h-6 w-[1px] bg-slate-200" />
             {user && (
               <Link to="/admin">
@@ -594,9 +666,22 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-white border-b border-slate-100 py-6 px-4 space-y-4 shadow-xl">
           {NAVIGATION.map((item) => (
-            <Link key={item.name} to={item.path} className="block text-slate-600 font-bold uppercase tracking-widest py-3 border-b border-slate-50 last:border-0" onClick={() => setIsOpen(false)}>
-              {item.name}
-            </Link>
+            <div key={item.name} className="flex flex-col">
+              {item.children ? (
+                <>
+                  <div className="text-slate-400 font-black uppercase tracking-widest text-[10px] py-2 pl-4 mb-2 bg-slate-50 rounded-lg">{item.name}</div>
+                  {item.children.map(child => (
+                    <Link key={child.name} to={child.path} className="block text-slate-600 font-bold uppercase tracking-widest py-3 pl-8 border-b border-slate-50 last:border-0" onClick={() => setIsOpen(false)}>
+                      {child.name}
+                    </Link>
+                  ))}
+                </>
+              ) : (
+                <Link key={item.name} to={item.path} className="block text-slate-600 font-bold uppercase tracking-widest py-3 border-b border-slate-50 last:border-0" onClick={() => setIsOpen(false)}>
+                  {item.name}
+                </Link>
+              )}
+            </div>
           ))}
         </div>
       )}
@@ -620,7 +705,7 @@ const Footer = () => {
               <a href="https://www.linkedin.com/company/cirameti-academy/" target="_blank" rel="noreferrer" className="p-3 bg-white shadow-sm border border-slate-100 rounded-xl hover:text-[#76BC21] transition-all hover:-translate-y-1">
                 <Linkedin className="w-5 h-5" />
               </a>
-              <a href="https://wa.me/917989155879" target="_blank" rel="noreferrer" className="p-3 bg-white shadow-sm border border-slate-100 rounded-xl hover:text-[#25D366] transition-all hover:-translate-y-1">
+              <a href="https://wa.me/918319256019" target="_blank" rel="noreferrer" className="p-3 bg-white shadow-sm border border-slate-100 rounded-xl hover:text-[#25D366] transition-all hover:-translate-y-1">
                 <MessageCircle className="w-5 h-5" />
               </a>
               <a href="https://www.instagram.com/cirametiacademy?igsh=MXRkY2JvZm9rYnh4eg%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" aria-label="Instagram" className="p-3 bg-white shadow-sm border border-slate-100 rounded-xl hover:text-[#C13584] transition-all hover:-translate-y-1">
@@ -651,6 +736,34 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+  );
+};
+
+const TopBanner = () => {
+  const navigate = useNavigate();
+  return (
+    <div className="w-full text-white z-50 md:fixed md:top-0 md:left-0" style={{ backgroundColor: 'rgb(30 45 90 / var(--tw-bg-opacity, 1))' }}>
+      <div className="max-w-7xl mx-auto px-4 py-3 md:h-12 flex flex-col md:flex-row items-center justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center items-center gap-2 sm:gap-3 flex-1 min-w-0 text-center sm:text-left">
+          <div className="flex-shrink-0 flex items-center justify-center sm:justify-start">
+            <Star className="w-5 h-5 text-[#76BC21]" />
+          </div>
+          <marquee behavior="scroll" direction="left"  scrollamount="10" className="ml-2">
+            Viral Referral Program — Refer a friend to Cirameti Academy and get  ₹1200 guaranteed cashback on successful enrollment!
+          </marquee>
+ 
+          <span className="hidden md:inline-flex ml-3 items-center text-[#76BC21] bg-white/10 px-2 py-1 rounded-full text-xs font-bold">
+            <Star className="w-3 h-3 text-[#76BC21] mr-1" /> 
+          </span>
+        </div>
+
+        <div className="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-4 flex-shrink-0 flex justify-center sm:justify-end">
+          <button onClick={() => navigate('/contact#enquiry-form')} className="bg-white text-[#00A3E0] font-bold px-4 py-2 rounded-full text-sm sm:px-4 sm:py-2 w-full sm:w-auto">
+            Claim Now
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -755,6 +868,48 @@ const About = () => {
     </div>
   );
 };
+
+// Products landing page to group Our Products items
+const Products = () => (
+  <div className="pt-48 pb-32 bg-white min-h-screen">
+    <div className="max-w-7xl mx-auto px-4">
+      <SectionHeading
+        title="Our Products"
+        subtitle="Explore outcomes-driven training, career services and guidance."
+        centered
+      />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <Link to="/courses" className="block">
+          <div className="p-12 bg-slate-50 rounded-[24px] border border-slate-100 shadow-sm hover:shadow-xl transition">
+            <h3 className="text-2xl font-black text-[#1E2D5A] mb-4">Courses</h3>
+            <p className="text-slate-500">Outcome-focused placement tracks and upskilling programs with detailed curricula and project work.</p>
+          </div>
+        </Link>
+
+        <Link to="/job-search" className="block">
+          <div className="p-12 bg-slate-50 rounded-[24px] border border-slate-100 shadow-sm hover:shadow-xl transition">
+            <h3 className="text-2xl font-black text-[#1E2D5A] mb-4">Job Search</h3>
+            <p className="text-slate-500">Premium placement services — resume marketing, assessments and interview orchestration for top talent.</p>
+          </div>
+        </Link>
+
+        <Link to="/free-guidance" className="block">
+          <div className="p-12 bg-slate-50 rounded-[24px] border border-slate-100 shadow-sm hover:shadow-xl transition">
+            <h3 className="text-2xl font-black text-[#1E2D5A] mb-4">Free Career Guidance</h3>
+            <p className="text-slate-500">One-on-one mentorship, resume reviews and mock interviews to help you plan your next career step.</p>
+          </div>
+        </Link>
+      </div>
+
+      <div className="mt-16 text-center">
+        <Link to="/contact">
+          <Button variant="primary" size="lg">Get In Touch</Button>
+        </Link>
+      </div>
+    </div>
+  </div>
+);
 
 const Courses = () => {
   const { courses } = useContext(AppContext)!;
@@ -963,92 +1118,218 @@ const Blog = () => {
   );
 };
 
-const Contact = () => {
-  const WHATSAPP_LINK = "https://wa.me/917989155879";
-  const GOOGLE_FORM_LINK = "https://forms.gle/5G1Zg8dDHmsfnSUf8";
+const Contact: React.FC = () => {
+  const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbz39xbBZtAXw0QjglKoYvhxircsZuJKSfEZkNSYEz2rMo5dVdtE57CxcoOPiyb82fhE/exec';
+  const WHATSAPP_LINK = "https://wa.me/918319256019";
   const { hash } = useLocation();
   const enquiryBoxRef = useRef<HTMLDivElement>(null);
 
-  // Manual smooth scroll effect for targeted hash
+  // smooth scroll if user arrives with #enquiry-form
   useEffect(() => {
     if (hash === '#enquiry-form' && enquiryBoxRef.current) {
-      setTimeout(() => {
-        enquiryBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+      setTimeout(() => enquiryBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
     }
   }, [hash]);
 
-  return (
-    <div className="pt-40 pb-32 bg-white">
-      <div className="max-w-7xl mx-auto px-4">
-        <SectionHeading title="Connect With Us" subtitle="Start your professional transformation today." />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 mt-20 text-center items-center">
-          <div className="space-y-10 w-full overflow-hidden">
-            <div className="p-6 sm:p-12 bg-slate-50 rounded-[40px] sm:rounded-[48px] border border-slate-100 shadow-sm text-center">
-              <h4 className="font-black text-xl sm:text-2xl mb-8 text-[#1E2D5A] uppercase tracking-wider border-b border-slate-200 pb-4">Admissions & Support</h4>
-              
-              <div className="space-y-8 mb-12">
-                <div>
-                  <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 uppercase">Contact Emails</h5>
-                  <div className="space-y-4">
-                    <p className="text-[#00A3E0] font-black text-base sm:text-xl hover:underline cursor-pointer break-all sm:break-normal leading-tight">sales@cirametiacademy.in</p>
-                    <p className="text-[#00A3E0] font-black text-base sm:text-xl hover:underline cursor-pointer break-all sm:break-normal leading-tight">contact@cirametiacademy.in</p>
-                  </div>
-                </div>
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    program: 'Job oriented course',
+    message: ''
+  });
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-                <div>
-                  <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 uppercase">Admin Hotlines</h5>
-                  <div className="space-y-2">
-                    <p className="text-[#1E2D5A] font-black text-lg sm:text-xl">+91 6304443883</p>
-                    <p className="text-[#1E2D5A] font-black text-lg sm:text-xl">+91 7989155879</p>
-                  </div>
-                </div>
-              </div>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('loading');
+    try {
+      const data = new FormData();
+      data.append('name', formData.name);
+      data.append('email', formData.email);
+      data.append('phone', formData.phone);
+      data.append('program', formData.program);
+      data.append('message', formData.message);
 
-              <div className="flex justify-center gap-8 sm:gap-12 pt-8 border-t border-slate-200">
-                 <a href="tel:+917989155879" className="flex flex-col items-center gap-2 group">
-                    <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-100 text-[#76BC21] group-hover:bg-[#76BC21] group-hover:text-white transition-all">
-                      <Phone className="w-6 h-6" />
-                    </div>
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest uppercase">Voice Call</span>
-                 </a>
-                 <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" className="flex flex-col items-center gap-2 group">
-                    <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-100 text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-all">
-                      <MessageCircle className="w-6 h-6" />
-                    </div>
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest uppercase">WhatsApp</span>
-                 </a>
-              </div>
+      await fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: data,
+      });
+
+      setStatus('success');
+      setFormData({ name: '', email: '', phone: '', program: 'Job oriented course', message: '' });
+    } catch (error) {
+      console.error('Submission error:', error);
+      setStatus('error');
+    }
+  };
+
+  if (status === 'success') {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+        <div className="bg-white p-8 md:p-20 rounded-[2rem] shadow-2xl shadow-emerald-900/10 border border-slate-100 max-w-3xl mx-auto animate-in zoom-in-95 duration-500">
+          <div className="flex justify-center mb-6">
+            <div className="bg-emerald-50 p-6 md:p-8 rounded-full">
+              <CheckCircle className="w-20 h-20 md:w-24 md:h-24 text-emerald-600" />
             </div>
           </div>
-
-          <div 
-            id="enquiry-form" 
-            ref={enquiryBoxRef}
-            className="bg-[#1E2D5A] p-10 md:p-20 rounded-[48px] sm:rounded-[64px] shadow-3xl text-center scroll-mt-32 transition-all duration-700 w-full"
+          <h2 className="text-3xl md:text-5xl font-black text-blue-900 mb-6 md:mb-8 tracking-tight">Submission Successful</h2>
+          <p className="text-lg md:text-2xl text-slate-500 mb-8 md:mb-12 font-medium leading-relaxed max-w-xl mx-auto">
+            Your inquiry is recorded. Our academic lead will reach out to you shortly at <span className="text-blue-900 font-black">+91 8319256019</span>.
+          </p>
+          <button 
+            onClick={() => setStatus('idle')}
+            className="px-8 md:px-16 py-3 md:py-6 bg-blue-900 text-white rounded-2xl md:rounded-3xl font-black text-lg md:text-xl hover:bg-emerald-600 transition-all uppercase tracking-[0.2em] shadow-md"
           >
-            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black mb-8 text-white leading-tight uppercase tracking-tight">Send a Message</h3>
-            <p className="text-white/60 text-lg mb-12 max-w-sm mx-auto font-medium">
-              We've simplified our enquiry process. Please click below to provide your details via our secure application form.
-            </p>
-            <div className="flex flex-col gap-6">
-              <a href={GOOGLE_FORM_LINK} target="_blank" rel="noreferrer" className="w-full">
-                <Button variant="primary" size="lg" className="w-full py-6 sm:py-8 text-lg sm:text-xl rounded-2xl sm:rounded-3xl font-black group shadow-2xl shadow-[#76BC21]/40 uppercase tracking-wider">
-                   CONTACT AND REGISTER <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
-                </Button>
-              </a>
-              <div className="flex items-center justify-center gap-3">
-                <div className="h-[1px] w-8 bg-white/20" />
-                <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Redirects to secure form</p>
-                <div className="h-[1px] w-8 bg-white/20" />
+            New Request
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12" ref={enquiryBoxRef}>
+      <div className="text-center mb-10">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#1E2D5A] mb-3">Contact Us</h2>
+        <p className="text-lg text-slate-500 max-w-2xl mx-auto">Have a question or want to register? Fill the form and our team will reach out within 24 hours.</p>
+        <div className="mt-6 h-1 w-28 bg-[#76BC21] rounded-full mx-auto" />
+      </div>
+      <div className="grid lg:grid-cols-2 gap-20">
+        <div className="space-y-10 w-full overflow-hidden">
+          <div className="p-6 sm:p-12 bg-slate-50 rounded-[40px] sm:rounded-[48px] border border-slate-100 shadow-sm text-center">
+            <h4 className="font-black text-xl sm:text-2xl mb-8 text-[#1E2D5A] uppercase tracking-wider border-b border-slate-200 pb-4">Admissions & Support</h4>
+            
+            <div className="space-y-8 mb-12">
+              <div>
+                <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 uppercase">Contact Emails</h5>
+                <div className="space-y-4">
+                  <p className="text-[#00A3E0] font-black text-base sm:text-xl hover:underline cursor-pointer break-all sm:break-normal leading-tight">sales@cirametiacademy.in</p>
+                  <p className="text-[#00A3E0] font-black text-base sm:text-xl hover:underline cursor-pointer break-all sm:break-normal leading-tight">contact@cirametiacademy.in</p>
+                </div>
+              </div>
+
+              <div>
+                <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 uppercase">Admin Hotlines</h5>
+                <div className="space-y-2">
+                  <p className="text-[#1E2D5A] font-black text-lg sm:text-xl">+91 6304443883</p>
+                  <p className="text-[#1E2D5A] font-black text-lg sm:text-xl">+91 8319256019</p>
+                </div>
               </div>
             </div>
+
+            <div className="flex justify-center gap-8 sm:gap-12 pt-8 border-t border-slate-200">
+               <a href="tel:+918319256019" className="flex flex-col items-center gap-2 group">
+                  <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-100 text-[#76BC21] group-hover:bg-[#76BC21] group-hover:text-white transition-all">
+                    <Phone className="w-6 h-6" />
+                  </div>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest uppercase">Voice Call</span>
+               </a>
+               <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" className="flex flex-col items-center gap-2 group">
+                  <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-100 text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-all">
+                    <MessageCircle className="w-6 h-6" />
+                  </div>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest uppercase">WhatsApp</span>
+               </a>
+            </div>
           </div>
+        </div>
+
+        <div className="p-8 md:p-12 rounded-[2rem] shadow-2xl border border-[#1E2D5A] relative max-w-2xl mx-auto" style={{ boxShadow: '0 24px 60px rgba(14,25,50,0.18)', backgroundColor: 'rgb(30 45 90 / var(--tw-bg-opacity, 1))' }}>
+          <form className="space-y-8 relative z-10" onSubmit={handleSubmit}>
+            <div className="grid md:grid-cols-2 gap-10">
+              <div>
+                <label className="block text-[10px] font-black text-white/90 mb-3 uppercase tracking-[0.25em]">Full Name</label>
+                <input 
+                  name="name"
+                  type="text" 
+                  required
+                  value={formData.name}
+                  onChange={e => setFormData({...formData, name: e.target.value})}
+                  placeholder="Your Name" 
+                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 focus:border-[#1E2D5A] focus:ring-2 focus:ring-[#1E2D5A]/10 text-base text-[#1E2D5A] font-medium placeholder:text-slate-400 transition-all outline-none shadow-sm" 
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-black text-white/90 mb-3 uppercase tracking-[0.25em]">Mobile Number</label>
+                <input 
+                  name="phone"
+                  type="tel" 
+                  required
+                  value={formData.phone}
+                  onChange={e => setFormData({...formData, phone: e.target.value})}
+                  placeholder="+91 XXXXX XXXXX" 
+                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 focus:border-[#1E2D5A] focus:ring-2 focus:ring-[#1E2D5A]/10 text-base text-[#1E2D5A] font-medium placeholder:text-slate-400 transition-all outline-none shadow-sm" 
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-[10px] font-black text-white/90 mb-3 uppercase tracking-[0.25em]">Email Address</label>
+              <input 
+                name="email"
+                type="email" 
+                required
+                value={formData.email}
+                onChange={e => setFormData({...formData, email: e.target.value})}
+                placeholder="you@domain.com" 
+                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 focus:border-[#1E2D5A] focus:ring-2 focus:ring-[#1E2D5A]/10 text-base text-[#1E2D5A] font-medium placeholder:text-slate-400 transition-all outline-none shadow-sm" 
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-black text-white/90 mb-4 uppercase tracking-[0.25em]">Select Program</label>
+              <div className="relative">
+                <select 
+                  name="program"
+                  value={formData.program}
+                  onChange={e => setFormData({...formData, program: e.target.value})}
+                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 focus:border-[#1E2D5A] focus:ring-2 focus:ring-[#1E2D5A]/10 text-base text-[#1E2D5A] font-medium transition-all appearance-none outline-none cursor-pointer shadow-sm"
+                >
+                  <option value="Job oriented course">Job oriented course</option>
+                  <option value="Upskilling course">Upskilling course</option>
+                  <option value="Job search services">Job search services</option>
+                  <option value="Free Career guidance consultation">Free Career guidance consultation</option>
+                </select>
+                <ChevronDown className="absolute right-8 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-[10px] font-black text-white/90 mb-3 uppercase tracking-[0.25em]">Your Career Goals</label>
+              <textarea 
+                name="message"
+                rows={4} 
+                required
+                value={formData.message}
+                onChange={e => setFormData({...formData, message: e.target.value})}
+                placeholder="Tell us about your background or requirements..." 
+                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 focus:border-[#1E2D5A] focus:ring-2 focus:ring-[#1E2D5A]/10 text-base text-[#1E2D5A] font-medium placeholder:text-slate-400 transition-all outline-none resize-none shadow-sm"
+              ></textarea>
+            </div>
+            
+            <button 
+              type="submit" 
+              disabled={status === 'loading'}
+              className="group w-full bg-blue-900 text-white py-4 rounded-2xl font-black text-xl hover:bg-emerald-600 transition-all shadow-md disabled:opacity-50 flex items-center justify-center space-x-3 uppercase tracking-[0.15em]"
+            >
+              {status === 'loading' ? (
+                <>
+                  <Loader2 className="w-8 h-8 animate-spin" />
+                  <span>Submitting...</span>
+                </>
+              ) : (
+                <>
+                  <span>Submit now</span>
+                  <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+                </>
+              )}
+            </button>
+          </form>
         </div>
       </div>
     </div>
   );
 };
+
 
 const AdminDashboard = () => {
   const { leads, logout, user } = useContext(AppContext)!;
@@ -1101,18 +1382,166 @@ const Login = () => {
   );
 };
 
+// Course detail page
+const CourseDetail = () => {
+  const { id } = useParams() as { id?: string };
+  const { courses } = useContext(AppContext)!;
+  const course = courses.find(c => c.id === id);
+  const navigate = useNavigate();
+
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
+  if (!course) return (
+    <div className="pt-48 pb-32 text-center min-h-screen">
+      <h2 className="text-3xl font-black mb-8">Course Not Found</h2>
+      <Button onClick={() => navigate('/courses')}>Back to Catalog</Button>
+    </div>
+  );
+
+  return (
+    <div className="pt-32 bg-white min-h-screen">
+      <div className="bg-slate-50 py-20 border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4">
+          <button onClick={() => navigate('/courses')} className="flex items-center gap-2 text-[#76BC21] font-black uppercase tracking-widest text-xs mb-10 hover:gap-4 transition-all">
+            <ChevronLeft className="w-4 h-4" /> Back to Catalog
+          </button>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-3 px-4 py-1 rounded-full bg-[#76BC21]/10 border border-[#76BC21]/20 text-[#76BC21] text-xs font-black uppercase tracking-widest mb-6">
+                {course.category}-Oriented Track
+              </div>
+              <h1 className="text-4xl md:text-6xl font-black text-[#1E2D5A] mb-8 leading-tight tracking-tight">{course.title}</h1>
+              <div className="flex flex-wrap gap-10">
+                <div className="flex items-center gap-3">
+                  <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-200"><Clock className="w-5 h-5 text-[#00A3E0]" /></div>
+                  <div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Duration</div>
+                    <div className="text-lg font-bold text-[#1E2D5A]">{course.duration}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-200"><Award className="w-5 h-5 text-[#76BC21]" /></div>
+                  <div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Level</div>
+                    <div className="text-lg font-bold text-[#1E2D5A]">{course.level}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <img src={course.image} alt={course.title} className="rounded-[48px] shadow-3xl w-full h-[400px] object-cover" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-32">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-24">
+          <div className="lg:col-span-2 space-y-24">
+            <section>
+              <h2 className="text-3xl font-black text-[#1E2D5A] mb-8 uppercase tracking-tight">Program Overview</h2>
+              <p className="text-xl leading-relaxed text-slate-600 font-medium">{course.description}</p>
+            </section>
+            <section>
+              <h2 className="text-3xl font-black text-[#1E2D5A] mb-12 uppercase tracking-tight">What You Will Learn</h2>
+              <div className="space-y-12">
+                {(course.curriculumModules || []).map((module, idx) => (
+                  <div key={idx} className="flex gap-8 group">
+                    <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-2xl font-black text-slate-300 group-hover:bg-[#76BC21] group-hover:text-white transition-all">{idx + 1}</div>
+                    <div>
+                      <h4 className="text-2xl font-extrabold text-[#1E2D5A] mb-4">{module.title}</h4>
+                      <p className="text-lg text-slate-500 font-medium leading-relaxed">{(module as any).description || ''}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+          <div className="lg:col-span-1">
+            <div className="p-10 bg-slate-50 border border-slate-100 rounded-[40px] sticky top-32">
+              <h3 className="text-2xl font-black text-[#1E2D5A] mb-8">Program Details</h3>
+              <ul className="space-y-6">
+                {(course.whoThisProgramIsFor || []).map((who, i) => (
+                  <li key={i} className="flex gap-3 text-lg text-slate-600 font-medium"><CheckCircle className="w-6 h-6 text-[#76BC21]" />{who}</li>
+                ))}
+              </ul>
+              <div className="mt-12 pt-12 border-t border-slate-200">
+                <div className="text-4xl font-black text-[#1E2D5A] mb-2">{course.price}</div>
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-8">One-time Investment</div>
+                <Link to="/contact"><Button variant="primary" size="lg" className="w-full py-6 text-xl rounded-2xl">Enrol in Program</Button></Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Job Search page
+const JobSearch = () => (
+  <div className="pt-48 pb-32 bg-white min-h-screen">
+    <div className="max-w-7xl mx-auto px-4">
+      <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-[#00A3E0]/10 border border-[#00A3E0]/20 text-[#00A3E0] text-xs font-black uppercase tracking-[0.25em] mb-12"><Handshake className="w-4 h-4" /> <span>Accelerated Career Placement</span></div>
+      <SectionHeading title="Professional Job Search Services" subtitle="Exclusive resume marketing and interview arrangement for high-merit candidates. Bridging the gap between your skills and global employers." />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mt-20">
+        <div className="space-y-12">
+          <div className="p-12 bg-slate-50 border border-slate-100 rounded-[48px]">
+            <h3 className="text-3xl font-black text-[#1E2D5A] mb-8">The Process</h3>
+            <ul className="space-y-8">
+              {[{ title: 'Resume Marketing', desc: 'We leverage our 200+ partner companies to place your profile directly with decision makers.' },{ title: 'Skills Assessment', desc: 'Candidates are thoroughly assessed for technical merit before we take you to interviews.' },{ title: 'Global Opportunities', desc: 'Access exclusive roles not listed on traditional job boards.' },{ title: 'Pay After Placement', desc: 'Nominal fee of ₹25,000. Pay only after you secure your role.' }].map((step, idx) => (
+                <li key={idx} className="flex gap-6"><div className="flex-shrink-0 w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center font-black text-[#76BC21] border border-slate-200">{idx + 1}</div><div><h4 className="text-xl font-black text-[#1E2D5A] mb-2">{step.title}</h4><p className="text-slate-500 font-medium leading-relaxed">{step.desc}</p></div></li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className="bg-[#1E2D5A] p-16 rounded-[48px] text-white flex flex-col justify-center text-center">
+          <div className="bg-[#76BC21] w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-10 shadow-xl"><TrendingUp className="w-10 h-10 text-white" /></div>
+          <h3 className="text-4xl font-black mb-6 uppercase tracking-tight">Access Premium Roles</h3>
+          <p className="text-xl text-slate-300 font-medium mb-12 leading-relaxed">If you have the skills but lack the opportunities, we market your profile and arrange interviews. External students are welcome to apply after assessment.</p>
+          <div className="text-5xl font-black text-[#76BC21] mb-2">₹25,000</div>
+          <div className="text-xs font-black uppercase tracking-widest text-slate-400 mb-12">Pay Only After We Place You</div>
+          <Link to="/contact"><Button variant="primary" size="lg" className="w-full py-6 rounded-2xl text-xl">Apply for Service</Button></Link>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Free Career Guidance page
+const FreeGuidance = () => (
+  <div className="pt-48 pb-32 bg-slate-50 min-h-screen">
+    <div className="max-w-7xl mx-auto px-4">
+      <SectionHeading title="Free Career Guidance Program" subtitle="Roadmap your tech journey with our expert mentors." centered />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-20">
+        {[{ icon: <ClipboardCheck className="w-8 h-8" />, title: 'Profile Check', desc: 'Honest assessment of your current professional standing.' },{ icon: <FileText className="w-8 h-8" />, title: 'Resume Review', desc: 'Structural feedback to pass modern ATS filters.' },{ icon: <Users className="w-8 h-8" />, title: 'Mock Interviews', desc: 'Live tech simulation with expert performance feedback.' },{ icon: <Compass className="w-8 h-8" />, title: 'Career Consultation', desc: '1-on-1 strategic roadmap planning.' }].map((item, idx) => (
+          <div key={idx} className="bg-white p-10 rounded-[40px] shadow-sm border border-slate-100 hover:shadow-2xl transition-all text-center"><div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-[#00A3E0] mx-auto mb-8 border border-slate-100">{item.icon}</div><h4 className="text-xl font-black text-[#1E2D5A] mb-4">{item.title}</h4><p className="text-slate-500 font-medium text-sm leading-relaxed">{item.desc}</p></div>
+        ))}
+      </div>
+      <div className="mt-24 text-center"><Link to="/contact"><Button variant="secondary" size="lg" className="rounded-2xl px-12">Book Free Consultation</Button></Link></div>
+    </div>
+  </div>
+);
+
 const Main = () => {
   const location = useLocation();
   const isAdminView = location.pathname.startsWith('/admin') || location.pathname === '/login';
   return (
-    <div className="flex flex-col min-h-screen bg-white custom-scrollbar overflow-x-hidden">
-      {!isAdminView && <Navbar />}
+    <div className={`flex flex-col min-h-screen bg-white custom-scrollbar overflow-x-hidden ${!isAdminView ? 'pt-12' : ''}`}>
+      {!isAdminView && <>
+        <TopBanner />
+        <Navbar />
+      </>}
       <ScrollToTop />
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/our-products" element={<Products />} />
           <Route path="/courses" element={<Courses />} />
+          <Route path="/courses/:id" element={<CourseDetail />} />
+          <Route path="/job-search" element={<JobSearch />} />
+          <Route path="/free-guidance" element={<FreeGuidance />} />
           <Route path="/hire" element={<Hire />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />

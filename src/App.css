@@ -33,6 +33,13 @@
   }
 }
 
+/* Marquee banner */
+.marquee-wrapper { overflow: hidden; position: relative; }
+.marquee { display: inline-flex; gap: 4rem; min-width: 200%; animation: marquee linear infinite; animation-duration: 18s; }
+.marquee span { display: inline-block; white-space: nowrap; color: inherit; }
+.marquee:hover { animation-play-state: paused; }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
 .card {
   padding: 2em;
 }
