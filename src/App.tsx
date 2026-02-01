@@ -931,7 +931,7 @@ const Courses = () => {
               onClick={() => setActiveTab('Placement')}
               className={`px-14 py-6 rounded-[28px] font-black uppercase tracking-[0.15em] text-sm transition-all duration-300 ${activeTab === 'Placement' ? 'bg-[#1E2D5A] text-white shadow-xl -translate-y-1' : 'text-slate-400 hover:text-[#1E2D5A]'}`}
             >
-              Placement Track
+              Job-oriented Track
             </button>
             <button 
               onClick={() => setActiveTab('Upskilling')}
