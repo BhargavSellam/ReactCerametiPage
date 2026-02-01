@@ -504,7 +504,7 @@ const TrackComparison = () => {
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-20 max-w-5xl mx-auto">
           <div className="bg-white p-14 rounded-[56px] shadow-2xl border-l-8 border-[#76BC21] relative overflow-hidden group">
-            <h3 className="text-3xl font-black text-[#1E2D5A] mb-10 uppercase tracking-tight">Placement Track</h3>
+            <h3 className="text-3xl font-black text-[#1E2D5A] mb-10 uppercase tracking-tight">Job-oriented Track </h3>
             <ul className="space-y-6">
               {[
                 'High-intensity, long-term commitment',
