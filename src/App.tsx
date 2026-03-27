@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
-import { HashRouter as Router, Routes, Route, Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Link, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { 
   Menu, X, ArrowRight, ChevronLeft, ChevronDown, Clock, Award, CheckCircle, Check, Shield, Star, Tv, LayoutDashboard, MessageCircle, Handshake, ClipboardCheck, FileText, Users, Compass, Zap, Target, Activity, Globe, MessageSquare, GraduationCap, Linkedin, Loader2, Phone, TrendingUp
 } from 'lucide-react';
@@ -582,20 +582,22 @@ const TrendingTracks = ({ courses }: { courses: Course[] }) => {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const { user } = useContext(AppContext)!;
   const location = useLocation();
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setDropdownOpen(false);
+      if (!activeDropdown) return;
+      const activeRef = dropdownRefs.current[activeDropdown];
+      if (activeRef && !activeRef.contains(event.target as Node)) {
+        setActiveDropdown(null);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [activeDropdown]);
 
   return (
     <nav className="fixed top-0 w-full z-40 bg-white/70 backdrop-blur-md border-b border-slate-100 shadow-sm">
@@ -611,19 +613,20 @@ const Navbar = () => {
               const hasChildren = !!item.children;
 
               if (hasChildren) {
+                const isDropdownActive = activeDropdown === item.name;
                 return (
-                  <div key={item.name} className="relative" ref={dropdownRef}>
+                  <div key={item.name} className="relative" ref={(el) => { dropdownRefs.current[item.name] = el; }}>
                     <button
-                      onClick={() => setDropdownOpen(!dropdownOpen)}
-                      className={`text-m font-bold uppercase tracking-widest flex items-center gap-2 transition-colors ${isActive || dropdownOpen ? 'text-[#76BC21]' : 'text-slate-500 hover:text-[#1E2D5A]'}`}
+                      onClick={() => setActiveDropdown(isDropdownActive ? null : item.name)}
+                      className={`text-m font-bold uppercase tracking-widest flex items-center gap-2 transition-colors ${isActive || isDropdownActive ? 'text-[#76BC21]' : 'text-slate-500 hover:text-[#1E2D5A]'}`}
                     >
-                      {item.name} <ChevronDown className={`w-3 h-3 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                      {item.name} <ChevronDown className={`w-3 h-3 transition-transform ${isDropdownActive ? 'rotate-180' : ''}`} />
                     </button>
-                    {dropdownOpen && (
+                    {isDropdownActive && (
                       <div className="absolute top-full left-0 mt-4 w-64 bg-white border border-slate-100 shadow-2xl rounded-2xl p-4">
                         <div className="flex flex-col gap-1">
                           {item.children!.map(child => (
-                            <Link key={child.name} to={child.path} onClick={() => setDropdownOpen(false)} className="px-4 py-3 text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-[#76BC21] hover:bg-slate-50 rounded-xl transition-all">
+                            <Link key={child.name} to={child.path} onClick={() => setActiveDropdown(null)} className="px-4 py-3 text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-[#76BC21] hover:bg-slate-50 rounded-xl transition-all">
                               {child.name}
                             </Link>
                           ))}
@@ -713,7 +716,7 @@ const Footer = () => {
                   <path d="M7 2C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2H7ZM12 7.8C14.3211 7.8 16.2 9.67893 16.2 12C16.2 14.3211 14.3211 16.2 12 16.2C9.67893 16.2 7.8 14.3211 7.8 12C7.8 9.67893 9.67893 7.8 12 7.8ZM18.4 6.2C18.4 6.77614 17.9761 7.2 17.4 7.2C16.8239 7.2 16.4 6.77614 16.4 6.2C16.4 5.62386 16.8239 5.2 17.4 5.2C17.9761 5.2 18.4 5.62386 18.4 6.2Z" />
                 </svg>
               </a>
-              <a href="https://youtube.com/@cirametiacademy?si=6uESgi48cT-IhEbI" target="_blank" rel="noreferrer" aria-label="YouTube" className="p-3 bg-white shadow-sm border border-slate-100 rounded-xl hover:text-[#FF0000] transition-all hover:-translate-y-1">
+              <a href="https://youtube.com/@cirameti-academy?si=vY1800Z3-g1BhadI" target="_blank" rel="noreferrer" aria-label="YouTube" className="p-3 bg-white shadow-sm border border-slate-100 rounded-xl hover:text-[#FF0000] transition-all hover:-translate-y-1">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                   <path d="M23.498 6.186a3 3 0 0 0-2.112-2.12C19.88 3.5 12 3.5 12 3.5s-7.88 0-9.386.566a3 3 0 0 0-2.112 2.12A31.02 31.02 0 0 0 0 12a31.02 31.02 0 0 0 .502 5.814 3 3 0 0 0 2.112 2.12C4.12 20.5 12 20.5 12 20.5s7.88 0 9.386-.566a3 3 0 0 0 2.112-2.12A31.02 31.02 0 0 0 24 12a31.02 31.02 0 0 0-.502-5.814zM9.75 15.02V8.98L15.5 12l-5.75 3.02z" />
                 </svg>
@@ -739,9 +742,118 @@ const Footer = () => {
   );
 };
 
+const FreeDemos = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const targetId = location.hash.substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        setTimeout(() => targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
+      }
+    }
+  }, [location.hash]);
+
+  const demoItems = [
+    {
+      id: 'free-demo-ai',
+      slug: 'ai-engineering',
+      title: 'AI Engineering',
+      subtitle: 'Learn Agentic AI from Scratch – Free Live Demo',
+      bullets: [
+        'Build your first AI workflow end-to-end',
+        'Connect tools, APIs, and automation patterns',
+        'Live project-based agent demos with Q&A',
+        'No prior AI experience needed',
+      ],
+      action: 'Register for AI Engineering',
+      banner: '🚀',
+    },
+    {
+      id: 'free-demo-data',
+      slug: 'data-science-analytics',
+      title: 'Data Science & Data Analytics',
+      subtitle: 'Learn Data Science & Analytics from Scratch – Free Live Demo',
+      bullets: [
+        'Work on a real dataset step-by-step',
+        'Perform data cleaning, exploration, and visualization',
+        'Build insights with Excel/Python/SQL',
+        'Get practical industry-ready outputs',
+      ],
+      action: 'Register for Data Demo',
+      banner: '📊',
+    },
+    {
+      id: 'free-demo-communication',
+      slug: 'communication',
+      title: 'Communication Skills',
+      subtitle: 'Learn Communication & Confidence – Free Live Demo',
+      bullets: [
+        'Practice real-life speaking scenarios',
+        'Boost public speaking, body language and interviews',
+        'Develop a strong professional presence',
+        'Immediate tips for workplace impact',
+      ],
+      action: 'Register for Communication',
+      banner: '🎤',
+    }
+  ];
+
+  return (
+    <section id="our-free-demos" className="py-28 bg-gradient-to-b from-[#f8fafc] via-white to-[#f1f5f9]">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-black text-[#1E2D5A]">Our Free Demos</h2>
+          <p className="mt-4 text-slate-500 max-w-2xl mx-auto">Choose a live demo track and reserve your seat in a high-demand, limited-capacity session.</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {demoItems.map((demo) => (
+            <div key={demo.id} id={demo.id} className="relative bg-white border border-slate-100 rounded-[32px] shadow-lg p-8 hover:-translate-y-1 transition-transform">
+              <div className="text-xl mb-4">{demo.banner}</div>
+              <h3 className="text-2xl font-black text-[#1E2D5A] mb-2">{demo.title}</h3>
+              <p className="text-slate-500 mb-5 font-medium">{demo.subtitle}</p>
+              <ul className="space-y-3 mb-6 text-slate-600 font-medium">
+                {demo.bullets.map((bullet, idx) => (
+                  <li key={idx} className="flex items-start gap-3"><span className="text-[#76BC21] mt-0.5">•</span>{bullet}</li>
+                ))}
+              </ul>
+              <div className="space-y-3 mb-6 text-sm text-slate-400 font-black uppercase tracking-widest">
+                <div>⏳ Next Live Demo Starts In: <span className="text-[#1E2D5A]">[Auto Timer Countdown]</span></div>
+                <div>📅 Date: <span className="text-[#1E2D5A]">[Auto-updated]</span></div>
+                <div>⏱️ Duration: 90 Minutes</div>
+              </div>
+              <Link to={`/free-demos/${demo.slug}`} className="w-full">
+                <button
+                  className="w-full rounded-2xl bg-[#76BC21] text-white py-3 font-black uppercase tracking-widest hover:bg-[#5fa417] transition-all"
+                >
+                  {demo.action}
+                </button>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const Home = () => {
   const { courses } = useContext(AppContext)!;
-  
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const targetId = hash.replace('#', '');
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        setTimeout(() => targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
+      }
+    }
+  }, [hash]);
+
   return (
     <div className="pt-20">
       <section className="relative overflow-hidden pt-28 pb-40 lg:pt-40 lg:pb-56 bg-white">
@@ -781,6 +893,267 @@ const Home = () => {
     </div>
   );
 };
+
+const DemoDetail = ({
+  title,
+  intro,
+  tasks,
+  sections,
+  fomo,
+  outcomes,
+  trainerHighlights,
+  closingNote,
+  backgroundImage,
+}: {
+  title: string;
+  intro: string;
+  tasks: string[];
+  sections?: { title: string; points: string[] }[];
+  fomo: string[];
+  outcomes: string[];
+  trainerHighlights: string[];
+  closingNote: string;
+  backgroundImage: string;
+}) => {
+  const navigate = useNavigate();
+  return (
+    <div className="pt-28 pb-20 bg-white min-h-screen">
+      <div className="relative overflow-hidden rounded-[32px] mb-12 mx-4 sm:mx-6 lg:mx-auto max-w-5xl" style={{ backgroundImage: `linear-gradient(rgba(15,23,42,.45), rgba(15,23,42,.45)), url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="relative z-10 px-8 py-14 text-center">
+          <p className="text-xs sm:text-sm font-black tracking-widest uppercase text-[#ADFF2F] mb-4">Free Live Demo Series</p>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4">{title}</h1>
+          <p className="mx-auto max-w-3xl text-base sm:text-lg text-white/90">{intro}</p>
+          <div className="mt-8 flex justify-center">
+            <Button size="lg" className="px-8 py-4" variant="primary" onClick={() => navigate('/contact#enquiry-form')}>
+              Limited Seats • Register Now
+            </Button>
+          </div>
+          {sections && sections.length > 0 && (
+            <div className="mt-12 text-left">
+              {sections.map((section, idx) => (
+                <div key={idx} className="mb-8">
+                  <h2 className="text-3xl font-extrabold text-white mb-3">{section.title}</h2>
+                  <ul className="text-white/90 text-sm font-medium space-y-2">
+                    {section.points.map((point, pIdx) => (
+                      <li key={pIdx}>• {point}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="max-w-5xl mx-auto px-4">
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <div className="bg-[#f8fafc] border border-slate-200 rounded-3xl p-8">
+            <h2 className="text-2xl font-black text-[#1E2D5A] mb-4">What You’ll Do (Live)</h2>
+            <ul className="space-y-3 text-slate-700 font-medium text-sm">
+              {tasks.map((item, idx) => (
+                <li key={idx} className="flex items-start gap-3"><span className="text-[#76BC21] mt-1">{idx + 1}.</span>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-[#f8fafc] border border-slate-200 rounded-3xl p-8">
+            <h2 className="text-2xl font-black text-[#1E2D5A] mb-4">Why This Matters</h2>
+            <ul className="space-y-3 text-slate-700 font-medium text-sm">
+              {fomo.map((item, idx) => (
+                <li key={idx} className="flex items-start gap-3"><span className="text-[#1E2D5A] font-black">•</span>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="bg-[#1E2D5A] text-white rounded-3xl p-8 mb-12">
+          <h2 className="text-2xl font-black mb-4">What You’ll Gain After This Session</h2>
+          <ul className="space-y-3 text-sm font-medium">
+            {outcomes.map((item, idx) => (
+              <li key={idx} className="flex items-start gap-3"><span className="text-[#76BC21] mt-0.5">✔</span>{item}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14">
+          <div className="bg-[#f8fafc] p-6 rounded-3xl border border-slate-200">
+            <h3 className="font-black text-[#1E2D5A] mb-3">Live Session Details</h3>
+            <ul className="space-y-2 text-slate-600 font-medium text-sm">
+              <li>Platform: Online (Live)</li>
+              <li>Duration: 90 Minutes</li>
+              <li>Type: Interactive + Q&A</li>
+            </ul>
+          </div>
+          <div className="bg-[#f8fafc] p-6 rounded-3xl border border-slate-200">
+            <h3 className="font-black text-[#1E2D5A] mb-3">Learn from Industry Experts</h3>
+            <ul className="space-y-2 text-slate-600 font-medium text-sm">
+              {trainerHighlights.map((item, idx) => (
+                <li key={idx}>• {item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="mb-10 bg-[#FEF2F2] border border-red-100 text-red-600 p-6 rounded-3xl">
+          <h3 className="font-black text-2xl mb-3">Final Call</h3>
+          <p>{closingNote}</p>
+          <p className="mt-3 font-bold">⏳ Registration closes once seats are filled. Limited capacity to maintain quality.</p>
+        </div>
+
+        <div className="text-center">
+          <button
+            onClick={() => navigate('/contact#enquiry-form')}
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#76BC21] text-white font-black uppercase tracking-widest px-10 py-4 text-base hover:bg-[#5fa417] transition-all"
+          >
+            Register Now
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AiEngineeringDemo = () => (
+  <DemoDetail
+    title="AI Engineering Live Demo - Agentic AI & Generative AI"
+    intro="Build your first AI workflow, understand how AI agents work, and explore real-world automation — all in one powerful live session."
+    backgroundImage="https://images.unsplash.com/photo-1611162616402-2fcf1ecc88a8?auto=format&fit=crop&w=1600&q=80"
+    // sections={[
+    //   {
+    //     title: 'Agentic AI',
+    //     points: [
+    //       'Deep dive into Agentic AI workflow design',
+    //       'AI agents orchestration and tool chaining',
+    //       'Build your first agentic automation from scratch',
+    //     ],
+    //   },
+    // ]}
+    tasks={[
+      'Build your first AI agent step-by-step',
+      'Connect tools, APIs, and workflows',
+      'See real-world automation in action',
+      'Learn how to start (even with zero coding)',
+    ]}
+    fomo={[
+      'AI is rapidly replacing repetitive jobs',
+      'Companies are actively hiring AI-skilled professionals',
+      'Most people are still unaware of Agentic AI',
+      'Early learners are already getting freelance & job opportunities',
+    ]}
+    outcomes={[
+      'Ability to build simple AI workflows',
+      'Clear understanding of how AI agents work',
+      'Confidence to explore real projects',
+      'Direction to enter AI & automation careers',
+    ]}
+    trainerHighlights={[
+      'AI Agents & Automation',
+      'Generative AI applications',
+      'Real-world project implementation',
+    ]}
+    closingNote="Spots fill quickly. Claim your free spot now to avoid missing this high-impact training."
+  />
+);
+
+const DataScienceDemo = () => (
+  <DemoDetail
+    title="Data Science & Analytics Live Demo"
+    intro="Build your first data project, understand how data-driven decisions work, and explore real-world analytics use cases — all in one powerful live session."
+    backgroundImage="https://images.unsplash.com/photo-1611162616402-2fcf1ecc88a8?auto=format&fit=crop&w=1600&q=80"
+    tasks={[
+      'Work on a real dataset step-by-step',
+      'Perform data cleaning and analysis',
+      'Build simple visualizations and insights',
+      'Understand tools used in industry (Excel / Python / SQL)',
+    ]}
+    fomo={[
+      'Data is the backbone of every business decision',
+      'Companies are hiring Data Analysts & Data Scientists rapidly',
+      'Even non-tech roles now require data skills',
+      'Early learners are already getting jobs & freelance projects',
+    ]}
+    outcomes={[
+      'Basic understanding of Data Science workflow',
+      'Hands-on experience with real data',
+      'Confidence to start your own projects',
+      'Clear roadmap to enter data careers',
+    ]}
+    trainerHighlights={[
+      'Data Analytics & Visualization',
+      'Data Science projects',
+      'Industry tools and workflows',
+    ]}
+    closingNote="Secure your seat while it is still available—these demos are limited to keep sessions highly interactive."
+  />
+);
+
+const CommunicationDemo = () => (
+  <DemoDetail
+    title="Communication Skills Live Demo"
+    intro="Master the art of speaking, improve your confidence, and develop a winning personality — all in one powerful live session."
+    backgroundImage="https://images.unsplash.com/photo-1611162616402-2fcf1ecc88a8?auto=format&fit=crop&w=1600&q=80"
+    tasks={[
+      'Practice real-life communication scenarios',
+      'Learn how to speak confidently in public',
+      'Improve body language & first impressions',
+      'Handle interviews and conversations effectively',
+    ]}
+    fomo={[
+      'Communication is the #1 skill for career growth',
+      'Confidence impacts interviews, jobs & relationships',
+      'Even highly skilled people fail without communication',
+      'Strong personality = more opportunities',
+    ]}
+    outcomes={[
+      'Strong foundation in communication skills',
+      'Improved confidence and positive attitude',
+      'Practical tips to handle real-life situations',
+      'Clear roadmap for personality development',
+    ]}
+    trainerHighlights={[
+      'Communication & Public Speaking',
+      'Personality Development',
+      'Interview Training & Soft Skills',
+    ]}
+    closingNote="Seats are limited to maintain interactive coaching. Register now before it is full."
+  />
+);
+
+const FreeDemoDetail = () => {
+  const { demoId } = useParams<{ demoId: string }>();
+  const navigate = useNavigate();
+
+  if (!demoId) {
+    return <Navigate to="/free-demos" replace />;
+  }
+
+  const mapping: Record<string, JSX.Element> = {
+    'ai-engineering': <AiEngineeringDemo />,
+    'data-science-analytics': <DataScienceDemo />,
+    'communication': <CommunicationDemo />,
+  };
+
+  const content = mapping[demoId];
+  if (!content) {
+    return (
+      <div className="pt-28 pb-20 min-h-screen">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-black text-[#1E2D5A] mb-4">Demo not found</h2>
+          <p className="text-slate-500 mb-8">The selected demo does not exist. Please choose from the live demos below.</p>
+          <Button onClick={() => navigate('/free-demos')} variant="primary">Back to Free Demos</Button>
+        </div>
+      </div>
+    );
+  }
+
+  return content;
+};
+
+const FreeDemosPage = () => (
+  <div className="pt-20">
+    <FreeDemos />
+  </div>
+);
 
 const About = () => {
   return (
@@ -1261,6 +1634,7 @@ const Contact: React.FC = () => {
                   <option value="Upskilling course">Upskilling course</option>
                   <option value="Job search services">Job search services</option>
                   <option value="Free Career guidance consultation">Free Career guidance consultation</option>
+                  <option value="Free Demo">Free Demo</option>
                 </select>
                 <ChevronDown className="absolute right-8 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
               </div>
@@ -1513,6 +1887,9 @@ const Main = () => {
           <Route path="/courses/:id" element={<CourseDetail />} />
           <Route path="/job-search" element={<JobSearch />} />
           <Route path="/free-guidance" element={<FreeGuidance />} />
+          <Route path="/free-demos" element={<FreeDemosPage />} />
+          <Route path="/free-demos/:demoId" element={<FreeDemoDetail />} />
+          <Route path="/our-products" element={<Products />} />
           <Route path="/hire" element={<Hire />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />

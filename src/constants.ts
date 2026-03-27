@@ -250,7 +250,12 @@ Ultimately, a strong foundation allows for rapid adaptation to future technologi
 export const NAVIGATION = [
   { name: 'Home', path: '/' },
   { name: 'About', path: '/about' },
-  { name: 'Our Products', children: [
+  { name: 'Our Free Demos', path: '/free-demos', children: [
+    { name: 'AI Engineering', path: '/free-demos/ai-engineering' },
+    { name: 'Data Science & Analytics', path: '/free-demos/data-science-analytics' },
+    { name: 'Communication', path: '/free-demos/communication' }
+  ] },
+  { name: 'Our Products', path: '/our-products', children: [
     { name: 'Courses', path: '/courses' },
     { name: 'Job Search', path: '/job-search' },
     { name: 'Free Career Guidance', path: '/free-guidance' }
