@@ -598,7 +598,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="md:fixed md:top-12 w-full z-40 bg-white/70 backdrop-blur-md border-b border-slate-100 shadow-sm">
+    <nav className="fixed top-0 w-full z-40 bg-white/70 backdrop-blur-md border-b border-slate-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center">
@@ -736,34 +736,6 @@ const Footer = () => {
         </div>
       </div>
     </footer>
-  );
-};
-
-const TopBanner = () => {
-  const navigate = useNavigate();
-  return (
-    <div className="w-full text-white z-50 md:fixed md:top-0 md:left-0" style={{ backgroundColor: 'rgb(30 45 90 / var(--tw-bg-opacity, 1))' }}>
-      <div className="max-w-7xl mx-auto px-4 py-3 md:h-12 flex flex-col md:flex-row items-center justify-between gap-3">
-        <div className="flex flex-col sm:flex-row sm:items-center items-center gap-2 sm:gap-3 flex-1 min-w-0 text-center sm:text-left">
-          <div className="flex-shrink-0 flex items-center justify-center sm:justify-start">
-            <Star className="w-5 h-5 text-[#76BC21]" />
-          </div>
-          <marquee behavior="scroll" direction="left"  scrollamount="10" className="ml-2">
-            Viral Referral Program — Refer a friend to Cirameti Academy and get  ₹1200 guaranteed cashback on successful enrollment!
-          </marquee>
- 
-          <span className="hidden md:inline-flex ml-3 items-center text-[#76BC21] bg-white/10 px-2 py-1 rounded-full text-xs font-bold">
-            <Star className="w-3 h-3 text-[#76BC21] mr-1" /> 
-          </span>
-        </div>
-
-        <div className="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-4 flex-shrink-0 flex justify-center sm:justify-end">
-          <button onClick={() => navigate('/contact#enquiry-form')} className="bg-white text-[#00A3E0] font-bold px-4 py-2 rounded-full text-sm sm:px-4 sm:py-2 w-full sm:w-auto">
-            Claim Now
-          </button>
-        </div>
-      </div>
-    </div>
   );
 };
 
@@ -1527,9 +1499,8 @@ const Main = () => {
   const location = useLocation();
   const isAdminView = location.pathname.startsWith('/admin') || location.pathname === '/login';
   return (
-    <div className={`flex flex-col min-h-screen bg-white custom-scrollbar overflow-x-hidden ${!isAdminView ? 'pt-12' : ''}`}>
+    <div className={`flex flex-col min-h-screen bg-white custom-scrollbar overflow-x-hidden ${!isAdminView ? 'pt-20' : ''}`}>
       {!isAdminView && <>
-        <TopBanner />
         <Navbar />
       </>}
       <ScrollToTop />
