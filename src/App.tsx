@@ -966,7 +966,7 @@ const DemoDetail = ({
           </div>
         </div>
 
-        <div className="bg-[#1E2D5A] text-white rounded-3xl p-8 mb-12">
+        <div className="bg-[#f8fafc] border border-slate-200 text-[#1E2D5A] rounded-3xl p-8 mb-12">
           <h2 className="text-2xl font-black mb-4">What You’ll Gain After This Session</h2>
           <ul className="space-y-3 text-sm font-medium">
             {outcomes.map((item, idx) => (
